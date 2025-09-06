@@ -1,3 +1,6 @@
+import { useState } from "react"
+import { InputAdd } from "./components/InputAdd";
+
 /*
 interface ICardProps{
   title: String
@@ -20,17 +23,46 @@ const Card = (props: ICardProps) => {
   );
 }
 */
-
-import { useState } from "react";
-
  export function App() {
-  const [count, setCount] = useState(0);
+  const [List, setList] = useState([
+    {id: '1', label: 'Fazer café', complete: false},
+    {id: '2', label: 'Fazer café', complete: false},
+    {id: '3', label: 'Fazer almoço', complete: false},
+    {id: '4', label: 'Fazer jantar', complete: false}
+  ]);
+
+   const handleAdd = (value: string) => {
+
+    setList([
+        ...List,
+        { id: (List.length + 1).toString(), complete: false, label: value }
+      ]);
+
+  }
 
   return (
     <div>
-      <button onClick={() => setCount(count + 1)}>
-        {count}
-      </button>
+
+      <InputAdd onAdd={handleAdd} />
+
+      <ol>
+        {List.map((listItem)=>(
+          <li key={listItem.id}>{listItem.label}
+          
+          {listItem.complete ? ' concluido ' : ''}
+          <button onClick={() => setList([
+        ...List.map(item =>({...item, complete: item.id === listItem.id ? true : item.complete}) )])}>
+            Concluido
+          </button>
+
+          <button onClick={() => setList([
+        ...List.filter(item => item.id !== listItem.id)])}>
+            Remove
+          </button>
+          </li>
+        ))}
+      </ol>
+
     </div>
   )
 }
